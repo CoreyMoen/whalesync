@@ -220,9 +220,9 @@ window.addEventListener('load', () => {
         const bgColor = canvas.getAttribute('data-dots-bg');
         const dotColor = bgColor === 'light' ? '#9CDCFC' : '#094E71';
         const interactiveCanvas = new InteractiveCanvas(canvas, {
-          dotSpacing: 12,
+          dotSpacing: 10,
           dotColor: dotColor,
-          lineWidth: 3,
+          lineWidth: 2,
           alphaTickCount: 200,
           maxMagnitude: 8,
           radius: 1000
