@@ -1,6 +1,6 @@
 // Dot class
 class Dot {
-  constructor(left, top, color, lineWidth, alphaTickCount) {
+  constructor(left, top, color, lineWidth, alphaTickCount, alphaChangeRate = 1) {
     this.left = left;
     this.top = top;
     this.magnitude = 0.001;
@@ -13,6 +13,7 @@ class Dot {
     this.alpha = 0;
     this.targetMagnitude = 0.001;
     this.targetAngle = 0;
+    this.alphaChangeRate = alphaChangeRate; // New property for alpha change rate
   }
 
   setAlpha() {
@@ -24,12 +25,18 @@ class Dot {
     }
 
     if (this.alphaIncreasing) {
-      this.alphaFrame++;
+      this.alphaFrame += this.alphaChangeRate; // Use the alpha change rate
     } else {
-      this.alphaFrame--;
+      this.alphaFrame -= this.alphaChangeRate; // Use the alpha change rate
     }
 
-    this.alpha = this.alphaFrame / this.alphaTickCount;
+    // Ensure alphaFrame stays within bounds
+    this.alphaFrame = Math.min(Math.max(this.alphaFrame, 0), this.alphaTickCount);
+
+    // Calculate alpha in the range of 0.5 to 1
+    const minAlpha = 0.2;
+    const maxAlpha = 1.0;
+    this.alpha = minAlpha + (maxAlpha - minAlpha) * (this.alphaFrame / this.alphaTickCount);
   }
 
   getAlpha(mouseOver) {
@@ -84,6 +91,7 @@ class InteractiveCanvas {
     this.alphaTickCount = options.alphaTickCount;
     this.maxMagnitude = options.maxMagnitude;
     this.radius = options.radius;
+    this.alphaChangeRate = options.alphaChangeRate || 1; // New option for alpha change rate
     this.isMobile = window.innerWidth < 768;
 
     this.canvas = canvasElement;
@@ -163,7 +171,7 @@ class InteractiveCanvas {
                                             [...new Array(numCols)].map((col, j) => {
       const top = (i + 0.5) * this.dotSpacing * devicePixelRatio;
       const left = (j + 0.5) * this.dotSpacing * devicePixelRatio;
-      return new Dot(left, top, this.dotColor, this.lineWidth, this.alphaTickCount);
+      return new Dot(left, top, this.dotColor, this.lineWidth, this.alphaTickCount, this.alphaChangeRate);
     })
                                            );
   }
@@ -225,7 +233,8 @@ window.addEventListener('load', () => {
           lineWidth: 2,
           alphaTickCount: 200,
           maxMagnitude: 8,
-          radius: 1000
+          radius: 1000,
+          alphaChangeRate: 0.5 // Adjust this value to change the rate of opacity change
         });
         canvas.interactiveCanvasInstance = interactiveCanvas;
       } else {
