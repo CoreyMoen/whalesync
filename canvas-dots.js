@@ -43,9 +43,9 @@ class Dot {
     return mouseOver ? 1 : this.alpha;
   }
 
-  draw(context, mouseOver) {
+  draw(context, mouseOver, canvasAlpha) {
     this.setAlpha();
-    context.globalAlpha = this.getAlpha(mouseOver);
+    context.globalAlpha = this.getAlpha(mouseOver) * canvasAlpha;
     context.strokeStyle = this.color;
     context.lineWidth = this.lineWidth;
     context.lineCap = "round";
@@ -100,6 +100,9 @@ class InteractiveCanvas {
     this.relMousePosition = { x: 0, y: 0 };
     this.mouseMoved = false;
     this.mouseOver = false;
+
+    this.canvasAlpha = 0; // Initial alpha for fade-in effect
+    this.fadeInDuration = 100; // Duration of fade-in in animation frames
 
     this.resizeObserver = new ResizeObserver(([entry]) => this.handleResize(entry));
     this.resizeObserver.observe(this.canvas.parentElement);
@@ -205,12 +208,18 @@ class InteractiveCanvas {
 
     this.dots.forEach(row => {
       row.forEach(dot => {
-        dot.draw(this.ctx, this.mouseOver);
+        dot.draw(this.ctx, this.mouseOver, this.canvasAlpha); // Pass canvasAlpha to draw method
       });
     });
   }
 
   animate() {
+    // Animate the fade-in effect
+    if (this.canvasAlpha < 1) {
+      this.canvasAlpha += 1 / this.fadeInDuration;
+      this.canvasAlpha = Math.min(this.canvasAlpha, 1);
+    }
+
     this.updateDotTransform();
     this.dots.forEach(row => row.forEach(dot => dot.animate()));
     this.draw();
