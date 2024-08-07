@@ -171,12 +171,12 @@ class InteractiveCanvas {
     const numCols = Math.ceil(width / (this.dotSpacing * devicePixelRatio));
 
     this.dots = [...new Array(numRows)].map((row, i) =>
-                                            [...new Array(numCols)].map((col, j) => {
-      const top = (i + 0.5) * this.dotSpacing * devicePixelRatio;
-      const left = (j + 0.5) * this.dotSpacing * devicePixelRatio;
-      return new Dot(left, top, this.dotColor, this.lineWidth, this.alphaTickCount, this.alphaChangeRate);
-    })
-                                           );
+      [...new Array(numCols)].map((col, j) => {
+        const top = (i + 0.5) * this.dotSpacing * devicePixelRatio;
+        const left = (j + 0.5) * this.dotSpacing * devicePixelRatio;
+        return new Dot(left, top, this.dotColor, this.lineWidth, this.alphaTickCount, this.alphaChangeRate);
+      })
+    );
   }
 
   updateDotTransform() {
@@ -223,7 +223,14 @@ class InteractiveCanvas {
     this.updateDotTransform();
     this.dots.forEach(row => row.forEach(dot => dot.animate()));
     this.draw();
-    requestAnimationFrame(() => this.animate());
+    this.animationFrame = requestAnimationFrame(() => this.animate());
+  }
+
+  stopAnimation() {
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
+    }
   }
 }
 
@@ -255,5 +262,4 @@ window.addEventListener('load', () => {
   });
 
   canvases.forEach(canvas => observer.observe(canvas));
-
 });
