@@ -235,7 +235,7 @@ window.addEventListener('load', () => {
       const canvas = entry.target;
       if (entry.isIntersecting) {
         const bgColor = canvas.getAttribute('data-dots-bg');
-        const dotColor = bgColor === 'light' ? '#9CDCFC' : '#094E71';
+        const dotColor = bgColor === 'light' ? '#5AC7FD' : '#016CA2';
         const interactiveCanvas = new InteractiveCanvas(canvas, {
           dotSpacing: 10,
           dotColor: dotColor,
