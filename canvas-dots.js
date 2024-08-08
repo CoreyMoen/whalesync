@@ -242,15 +242,15 @@ window.addEventListener('load', () => {
       const canvas = entry.target;
       if (entry.isIntersecting) {
         const bgColor = canvas.getAttribute('data-dots-bg');
-        const dotColor = bgColor === 'light' ? '#5AC7FD' : '#016CA2';
+        const dotColor = bgColor === 'light' ? '#2DB7FC' : '#016CA2';
         const interactiveCanvas = new InteractiveCanvas(canvas, {
           dotSpacing: 10,
           dotColor: dotColor,
           lineWidth: 2,
-          alphaTickCount: 200,
+          alphaTickCount: 120,
           maxMagnitude: 8,
           radius: 1000,
-          alphaChangeRate: 0.5 // Adjust this value to change the rate of opacity change
+          alphaChangeRate: 0.9
         });
         canvas.interactiveCanvasInstance = interactiveCanvas;
       } else {
